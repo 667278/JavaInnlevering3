@@ -5,68 +5,90 @@ import no.hvl.dat100.oppgave1.*;
 
 public class Blogg {
 
-	// TODO: objektvariable 
+	 Innlegg[] innleggtabell; 
+	    int nesteledig = 0;
 
-	public Blogg() {
-		throw new UnsupportedOperationException(TODO.constructor("Blogg"));
-	}
+		public Blogg() {
+	        innleggtabell = new Innlegg[20];
+		}
 
-	public Blogg(int lengde) {
-		throw new UnsupportedOperationException(TODO.constructor("Blogg"));
-	}
+		public Blogg(int lengde) {
+	        innleggtabell = new Innlegg[lengde];
 
-	public int getAntall() {
-		throw new UnsupportedOperationException(TODO.method());
-	}
-	
-	public Innlegg[] getSamling() {
-		throw new UnsupportedOperationException(TODO.method());
+		}
 
-	}
-	
-	public int finnInnlegg(Innlegg innlegg) {
-
-		throw new UnsupportedOperationException(TODO.method());
-	}
-
-	public boolean finnes(Innlegg innlegg) {
-		throw new UnsupportedOperationException(TODO.method());
-	}
-
-	public boolean ledigPlass() {
-		throw new UnsupportedOperationException(TODO.method());
-
-	}
-	
-	public boolean leggTil(Innlegg innlegg) {
-
-		throw new UnsupportedOperationException(TODO.method());
-	}
-	
-	public String toString() {
-		throw new UnsupportedOperationException(TODO.method());
-	}
-
-	// valgfrie oppgaver nedenfor
-	
-	public void utvid() {
-		throw new UnsupportedOperationException(TODO.method());
-	}
-	
-	public boolean leggTilUtvid(Innlegg innlegg) {
-
-		throw new UnsupportedOperationException(TODO.method());
+		public int getAntall() {
+	        return nesteledig;
+		}
 		
-	}
-	
-	public boolean slett(Innlegg innlegg) {
-		
-		throw new UnsupportedOperationException(TODO.method());
-	}
-	
-	public int[] search(String keyword) {
-		
-		throw new UnsupportedOperationException(TODO.method());
+		public Innlegg[] getSamling() {
+	        return innleggtabell;
+		}
 
+	    // ettersom det ikke er noe garanti på at innleggene er sortert etter id ser jeg ikke noe poeng i en avansert søkealgoritme
+		public int finnInnlegg(Innlegg innlegg) {
+	        for (int i = 0; i < nesteledig; i++) {
+	            if (innleggtabell[i].erLik(innlegg)) return i;
+	        }
+	        return -1;
+
+		}
+
+		public boolean finnes(Innlegg innlegg) {
+	        return finnInnlegg(innlegg) >= 0;
+		}
+
+		public boolean ledigPlass() {
+	        return nesteledig < innleggtabell.length; 
+
+		}
+		
+		public boolean leggTil(Innlegg innlegg) {
+	        if (ledigPlass()) { 
+	            innleggtabell[nesteledig] = innlegg;
+	            nesteledig++;
+	            return true;
+	        }
+	        return false;
+		}
+		
+		public String toString() {
+	        String result = Integer.toString(nesteledig) + "\n";
+	        for (int i = 0; i < nesteledig; i++) {
+	            result += innleggtabell[i].toString();
+	        }
+	        return result;
+		}
+
+		// valgfrie oppgaver nedenfor
+		
+		public void utvid() {
+	        int newSize = innleggtabell.length * 2;
+	        Innlegg[] newArr = new Innlegg[newSize];
+	        for (int i = 0; i < nesteledig; i++) {
+	            newArr[i] = innleggtabell[i];
+	        }
+	        innleggtabell = newArr;
+		}
+		
+		public boolean leggTilUtvid(Innlegg innlegg) {
+	        if (finnes(innlegg)) return false;
+
+	        if (leggTil(innlegg)) return true;
+	    
+	        utvid();
+	        return leggTil(innlegg);
+		}
+		
+		public boolean slett(Innlegg innlegg) {
+	        int innleggID = finnInnlegg(innlegg);
+
+		    if (innleggID == -1) return false;
+
+	        for (int i = innleggID; i < nesteledig - 1; i++) {
+	            innleggtabell[i] = innleggtabell[i + 1];
+	        }
+	        nesteledig--;
+	        return true;
 	}
 }
